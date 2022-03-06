@@ -8,6 +8,7 @@
 :root {
     --primary: #50586C;
     --secondary: #DCE2F0;
+    --secondary-hover: #a3aec5;
 }
 
 html {
@@ -23,7 +24,7 @@ html, body {
 
 body {
     display: grid;
-    grid-template-rows: 100px minmax(0, 1fr) 50px;
+    grid-template-rows: 75px minmax(0, 1fr) 50px;
 }
 
 header {
@@ -37,17 +38,48 @@ header {
 }
 
 .pageTitle {
-    font-size: 3.5rem;
+    font-size: 3.9rem;
+    word-spacing: -10px;
+    text-shadow: -2px 0 var(--secondary), 0 2px var(--secondary), 2px 0 var(--secondary), 0 -2px var(--secondary);
     margin: 0;
+    margin-top: 50px;
     padding: 0;
     color: var(--primary);
     font-family: 'Vampire Wars', 'Roboto', 'Courier New', Courier, monospace;
+    transition: transform 0.2s;
+}
+
+.pageTitle:hover {
+    transform: scale(1.10);
 }
 
 main {
     background-color: var(--primary);
     width: 100%;
     grid-row: 2 / 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#gameBoard {
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 100px 100px 100px;
+    gap: 10px;
+}
+
+.gameCell {
+    background-color: var(--secondary);
+    border: 0px solid;
+    border-radius: 5px;
+    transition: transform 0.2s, background-color 0.5s;
+}
+
+.gameCell:hover {
+    background-color: var(--secondary-hover);
+    transform: scale(1.03);
+
 }
 
 footer {
