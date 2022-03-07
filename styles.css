@@ -82,7 +82,7 @@ main {
     background-color: var(--secondary);
     transition: background-color 0.2s;
     font-size: 16px;
-    opacity: 0;
+    display: none;
 }
 
 #resetBtn:hover {

@@ -60,9 +60,18 @@ const displayController = (() => {
             if (gameController.isDraw === true) {
                 updateStatus(`It's a Draw!`);
             }
+            showResetButton();
             updateBoard();
         })
     }
+
+    reset.addEventListener("click", () => {
+        gameController.reset();
+        gameboard.reset();
+        updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+        hideResetButton();
+        updateBoard();
+    })
 
     const updateBoard = () => {
         for (let i = 0; i < boardCells.length; i++) {
@@ -72,6 +81,18 @@ const displayController = (() => {
 
     const updateStatus = (phrase) => {
         status.textContent = phrase;
+    }
+
+    const showResetButton = () => {
+        if (gameController.gameOver === true) {
+            reset.style.display = "block";
+        }
+    }
+
+    const hideResetButton = () => {
+        if (gameController.gameOver === true) {
+            reset.style.display = "none";
+        }
     }
 })();
 
@@ -153,11 +174,19 @@ const gameController = (() => {
         gameController.gameOver = gameOver;
     }
 
+    const reset = () => {
+        isWin = false;
+        isDraw = false;
+        gameOver = false;
+        currentTurn = 1;
+    }
+
     return {
         takeTurn,
         isWin,
         isDraw,
         gameOver,
         getCurrentPlayerPiece,
+        reset,
     }
 })();
