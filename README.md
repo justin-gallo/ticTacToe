@@ -12,3 +12,4 @@ A tic-tac-toe game to practice factory functions &amp; the module pattern.
 ### Things to Change: 
 - I'd like to better organize functions within my modules to prevent so many functions/variables being exposed globally. 
 - Need to update CSS so that interface sizing is dependent on viewport height (so that the interface doesn't break with particularly short displays).
+- Add an AI that you are able to play against.
