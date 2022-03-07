@@ -90,12 +90,12 @@ const gameController = (() => {
 
     //Allows the active player (determined by getCurrentPlayerPiece()) to place a piece.
     const takeTurn = (index) => {
-        if (gameboard.getCellValue(index) === "") { //check if cell is empty
+        if (gameboard.getCellValue(index) === "" && gameOver === false) { //check if cell is empty
             gameboard.setCellValue(index, getCurrentPlayerPiece()); //if it is, place the currentPlayer's piece
             checkIfWin(); //checks if there is a winner after placing a new piece
+            checkIfDraw(); //Check if there is a draw
+            currentTurn++; //increments the currentTurn variable
         }
-        checkIfDraw(); //Check if there is a draw
-        currentTurn++; //increments the currentTurn variable
     };
 
     //Checks if there is a draw on the board. If there is, isDraw becomes TRUE and gameOver becomes TRUE.
