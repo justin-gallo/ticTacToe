@@ -51,6 +51,9 @@ const displayController = (() => {
     for (let i = 0; i < boardCells.length; i++) {
         boardCells[i].addEventListener("click", function() {
             gameController.takeTurn(i);
+            if (gameController.isWin === false && gameController.isDraw === false) {
+                updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+            }
             updateBoard();
         })
     }
@@ -62,7 +65,7 @@ const displayController = (() => {
     }
 
     const updateStatus = (phrase) => {
-        status.textContent = "phrase";
+        status.textContent = phrase;
     }
 
     return {
@@ -148,5 +151,9 @@ const gameController = (() => {
 
     return {
         takeTurn,
+        isWin,
+        isDraw,
+        gameOver,
+        getCurrentPlayerPiece,
     }
 })();
