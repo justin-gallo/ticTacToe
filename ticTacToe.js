@@ -34,12 +34,26 @@ const gameboard = (() => {
         }
     }
 
+    //Selects a random cell on the board
+    const selectRandomCell = () => {
+        let emptyCells = [];
+        for (let i = 0; i < board.length; i++) {
+            if (board[i] === "") {
+                emptyCells.push(i);
+            }
+        }
+        let selectedCell = emptyCells[Math.floor(Math.random()*emptyCells.length)];
+        return selectedCell;
+    }
+
+
     // Makes these functions & variables accessible globally
     return {
         reset, 
         setCellValue,
         getCellValue,
         board,
+        selectRandomCell, 
     }
 })();
 
@@ -51,18 +65,50 @@ const displayController = (() => {
 
     for (let i = 0; i < boardCells.length; i++) {
         boardCells[i].addEventListener("click", function() {
-            gameController.takeTurn(i);
-            if (gameController.isWin === false && gameController.isDraw === false) {
-                updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+            if (gameController.opponent === "player") {
+                //Code below runs for current player's selection
+                gameController.takeTurn(i);
+                if (gameController.isWin === false && gameController.isDraw === false) {
+                    updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                }
+                if (gameController.isWin === true) {
+                    updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+                }
+                if (gameController.isDraw === true) {
+                    updateStatus(`It's a Draw!`);
+                }
+                showResetButton();
+                updateBoard();
             }
-            if (gameController.isWin === true) {
-                updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+            if (gameController.opponent === "bot") {
+                //Player's Move:
+                gameController.takeTurn(i);
+                if (gameController.isWin === false && gameController.isDraw === false) {
+                    updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                }
+                if (gameController.isWin === true) {
+                    updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+                }
+                if (gameController.isDraw === true) {
+                    updateStatus(`It's a Draw!`);
+                }
+                showResetButton();
+                updateBoard();
+
+                //Bot's Move:
+                gameController.takeTurn(gameboard.selectRandomCell());
+                if (gameController.isWin === false && gameController.isDraw === false) {
+                    updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                }
+                if (gameController.isWin === true) {
+                    updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+                }
+                if (gameController.isDraw === true) {
+                    updateStatus(`It's a Draw!`);
+                }
+                showResetButton();
+                updateBoard();
             }
-            if (gameController.isDraw === true) {
-                updateStatus(`It's a Draw!`);
-            }
-            showResetButton();
-            updateBoard();
         })
     }
 
@@ -106,17 +152,23 @@ const displayController = (() => {
 const gameController = (() => {
     const playerX = Player("X"); //creates playerX
     const playerO = Player("O"); //creates playerO
+    const playerBot = Player("O"); //creates Bot
     let currentTurn = 1; //sets the current turn to 1
     let isWin = false; //tracks if there is a win
     let isDraw = false; //tracks if there is a draw
     let gameOver = false; //tracks if the game is over
+    let opponent = "bot"; //Either "player" or "bot", determines opponent type
 
     //Determines who's turn it is (X plays on odd turns, O plays on evens)
     function getCurrentPlayerPiece() {
         if (currentTurn % 2 == 1) {
             return playerX.sayPiece();
-        } else {
-            return playerO.sayPiece();
+        } else { //Returns the other player if opponent is player, and bot if bot
+            if (opponent === "player") {
+                return playerO.sayPiece();
+            } else if (opponent === "bot") {
+                return playerBot.sayPiece();
+            }
         }
     }
 
@@ -128,6 +180,9 @@ const gameController = (() => {
             checkIfDraw(); //Check if there is a draw
             if (isWin === false && isDraw === false) {
                 currentTurn++; //increments the currentTurn variable
+            }
+            if (currentTurn % 2 == 1 && opponent === "bot") { // Makes the bot take a turn after the player
+
             }
         }
     };
@@ -160,7 +215,7 @@ const gameController = (() => {
             if (gameboard.board[i] === "X") {
                 indexOfXPieces.push(i);
             }
-            if (gameboard.board[i] === "O") {
+            if (gameboard.board[i] !== "X" && gameboard.board[i] !== "") {
                 indexOfOPieces.push(i);
             }
         }
@@ -196,5 +251,6 @@ const gameController = (() => {
         gameOver,
         getCurrentPlayerPiece,
         reset,
+        opponent,
     }
 })();
