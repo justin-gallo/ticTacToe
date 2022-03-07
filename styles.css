@@ -105,6 +105,7 @@ main {
     justify-content: center;
     align-items: center;
     font-size: 64px;
+    padding-bottom: 5px;
     font-family: 'Vampire Wars', 'Roboto', 'Courier New', Courier, monospace;
     color: var(--primary);
 }

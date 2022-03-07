@@ -54,6 +54,12 @@ const displayController = (() => {
             if (gameController.isWin === false && gameController.isDraw === false) {
                 updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
             }
+            if (gameController.isWin === true) {
+                updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+            }
+            if (gameController.isDraw === true) {
+                updateStatus(`It's a Draw!`);
+            }
             updateBoard();
         })
     }
@@ -66,10 +72,6 @@ const displayController = (() => {
 
     const updateStatus = (phrase) => {
         status.textContent = phrase;
-    }
-
-    return {
-        updateStatus,
     }
 })();
 
@@ -97,13 +99,15 @@ const gameController = (() => {
             gameboard.setCellValue(index, getCurrentPlayerPiece()); //if it is, place the currentPlayer's piece
             checkIfWin(); //checks if there is a winner after placing a new piece
             checkIfDraw(); //Check if there is a draw
-            currentTurn++; //increments the currentTurn variable
+            if (isWin === false && isDraw === false) {
+                currentTurn++; //increments the currentTurn variable
+            }
         }
     };
 
     //Checks if there is a draw on the board. If there is, isDraw becomes TRUE and gameOver becomes TRUE.
     const checkIfDraw = () => {
-        if (currentTurn === 9) {
+        if (currentTurn === 9 && isWin === false) {
             gameController.isDraw = true;
             gameController.gameOver = true;
         }
@@ -118,7 +122,7 @@ const gameController = (() => {
             [0, 3, 6], 
             [1, 4, 7], 
             [2, 5, 8],
-            [1, 4, 8], 
+            [0, 4, 8], 
             [2, 4, 6]
         ];
 
