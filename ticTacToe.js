@@ -34,6 +34,7 @@ const gameboard = (() => {
         }
     }
 
+    // Makes these functions & variables accessible globally
     return {
         reset, 
         setCellValue,
@@ -65,6 +66,7 @@ const displayController = (() => {
         })
     }
 
+    //Resets everything on click of the reset button
     reset.addEventListener("click", () => {
         gameController.reset();
         gameboard.reset();
@@ -73,22 +75,26 @@ const displayController = (() => {
         updateBoard();
     })
 
+    //Updates the DOM's board to match the board Array
     const updateBoard = () => {
         for (let i = 0; i < boardCells.length; i++) {
             boardCells[i].textContent = gameboard.getCellValue(i);
         }
     }
 
+    //Updates the status message
     const updateStatus = (phrase) => {
         status.textContent = phrase;
     }
 
+    //Shows the reset button on the DOM
     const showResetButton = () => {
         if (gameController.gameOver === true) {
             reset.style.display = "block";
         }
     }
 
+    //Hides the reset button on the DOM
     const hideResetButton = () => {
         if (gameController.gameOver === true) {
             reset.style.display = "none";
@@ -147,8 +153,7 @@ const gameController = (() => {
             [2, 4, 6]
         ];
 
-
-        // This code works; sucessfully results in arrays containing the pieces for both X and O
+        //Creates two arrays which contain the indicies occupied by X or O pieces.
         let indexOfXPieces = [];
         let indexOfOPieces = [];
         for (i = 0; i < (gameboard.board).length; i++) {
@@ -160,7 +165,7 @@ const gameController = (() => {
             }
         }
 
-        // This code works to match the indexOfXPieces/indexOfOPieces to the validWinStates
+        // Matches the indexOfXPieces/indexOfOPieces to the validWinStates
         for (let i = 0; i < validWinStates.length; i++) {
             if (validWinStates[i].every(elem => indexOfXPieces.includes(elem)) === true) {
                 isWin = true;
@@ -170,10 +175,12 @@ const gameController = (() => {
                 gameOver = true;
             }
         }
+        //Pass local variables out to module scope
         gameController.isWin = isWin;
         gameController.gameOver = gameOver;
     }
 
+    //Resets the state of the gameController()
     const reset = () => {
         isWin = false;
         isDraw = false;
@@ -181,6 +188,7 @@ const gameController = (() => {
         currentTurn = 1;
     }
 
+    //Makes these functions & variables accessible globally
     return {
         takeTurn,
         isWin,
