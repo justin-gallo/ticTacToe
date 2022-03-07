@@ -38,6 +38,7 @@ const gameboard = (() => {
         reset, 
         setCellValue,
         getCellValue,
+        board,
     }
 })();
 
@@ -74,7 +75,8 @@ const gameController = (() => {
     const playerX = Player("X"); //creates playerX
     const playerO = Player("O"); //creates playerO
     let currentTurn = 1; //sets the current turn to 1
-    let winState = ""; //tracks if there is a win/loss/draw
+    let isWin = false; //tracks if there is a win
+    let isDraw = false; //tracks if there is a draw
     let gameOver = false; //tracks if the game is over
 
     //Determines who's turn it is (X plays on odd turns, O plays on evens)
@@ -90,14 +92,59 @@ const gameController = (() => {
     const takeTurn = (index) => {
         if (gameboard.getCellValue(index) === "") { //check if cell is empty
             gameboard.setCellValue(index, getCurrentPlayerPiece()); //if it is, place the currentPlayer's piece
+            checkIfWin(); //checks if there is a winner after placing a new piece
         }
-        //CHECK IF WIN STATE EXISTS
-        if (currentTurn === 9) { //check if every space on the board is full
-            winState = "draw";
-            gameOver = "true"
-        }
-        currentTurn++;
+        checkIfDraw(); //Check if there is a draw
+        currentTurn++; //increments the currentTurn variable
     };
+
+    //Checks if there is a draw on the board. If there is, isDraw becomes TRUE and gameOver becomes TRUE.
+    const checkIfDraw = () => {
+        if (currentTurn === 9) {
+            gameController.isDraw = true;
+            gameController.gameOver = true;
+        }
+    }
+
+    //Checks if there is a win state on the board. If there is, isWin becomes TRUE and gameOver becomes TRUE.
+    const checkIfWin = () => {
+        const validWinStates = [ //Hardcoded win states. These INDEXES of the board array must MATCH for a win
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8], 
+            [0, 3, 6], 
+            [1, 4, 7], 
+            [2, 5, 8],
+            [1, 4, 8], 
+            [2, 4, 6]
+        ];
+
+
+        // This code works; sucessfully results in arrays containing the pieces for both X and O
+        let indexOfXPieces = [];
+        let indexOfOPieces = [];
+        for (i = 0; i < (gameboard.board).length; i++) {
+            if (gameboard.board[i] === "X") {
+                indexOfXPieces.push(i);
+            }
+            if (gameboard.board[i] === "O") {
+                indexOfOPieces.push(i);
+            }
+        }
+
+        // This code works to match the indexOfXPieces/indexOfOPieces to the validWinStates
+        for (let i = 0; i < validWinStates.length; i++) {
+            if (validWinStates[i].every(elem => indexOfXPieces.includes(elem)) === true) {
+                isWin = true;
+                gameOver = true;
+            } else if (validWinStates[i].every(elem => indexOfOPieces.includes(elem)) === true) {
+                isWin = true;
+                gameOver = true;
+            }
+        }
+        gameController.isWin = isWin;
+        gameController.gameOver = gameOver;
+    }
 
     return {
         takeTurn,
