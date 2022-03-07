@@ -44,7 +44,7 @@ const gameboard = (() => {
 //displayController module: Everything DOM related (Click events), references gameboard module. 
 const displayController = (() => {
     const boardCells = document.querySelectorAll(".gameCell");
-    const message = document.getElementById("status");
+    const status = document.getElementById("status");
     const reset = document.getElementById("resetBtn");
 
     for (let i = 0; i < boardCells.length; i++) {
@@ -60,39 +60,46 @@ const displayController = (() => {
         }
     }
 
+    const updateStatus = (phrase) => {
+        status.textContent = "phrase";
+    }
+
     return {
-        //functions to return
+        updateStatus,
     }
 })();
 
 //gameController module: controls gameplay, turns, game logic. 
 const gameController = (() => {
-    const playerX = Player("X");
-    const playerO = Player("O");
-    let turn = 1;
+    const playerX = Player("X"); //creates playerX
+    const playerO = Player("O"); //creates playerO
+    let currentTurn = 1; //sets the current turn to 1
+    let winState = ""; //tracks if there is a win/loss/draw
+    let gameOver = false; //tracks if the game is over
 
     //Determines who's turn it is (X plays on odd turns, O plays on evens)
     function getCurrentPlayerPiece() {
-        if (turn % 2 == 1) {
+        if (currentTurn % 2 == 1) {
             return playerX.sayPiece();
         } else {
             return playerO.sayPiece();
         }
     }
 
+    //Allows the active player (determined by getCurrentPlayerPiece()) to place a piece.
     const takeTurn = (index) => {
-        if (gameboard.getCellValue(index) === "") {
-            gameboard.setCellValue(index, getCurrentPlayerPiece());
-        } else {
-            return;
-        };
-        turn++;
+        if (gameboard.getCellValue(index) === "") { //check if cell is empty
+            gameboard.setCellValue(index, getCurrentPlayerPiece()); //if it is, place the currentPlayer's piece
+        }
+        //CHECK IF WIN STATE EXISTS
+        if (currentTurn === 9) { //check if every space on the board is full
+            winState = "draw";
+            gameOver = "true"
+        }
+        currentTurn++;
     };
 
     return {
         takeTurn,
-        getCurrentPlayerPiece,
-        playerX, 
-        playerO,
     }
 })();
