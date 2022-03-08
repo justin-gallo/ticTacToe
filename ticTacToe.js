@@ -81,96 +81,99 @@ const displayController = (() => {
             }
             if (gameController.opponent === "bot") {
                 //Player's Move:
-                gameController.takeTurn(i);
-                if (gameController.isWin === false && gameController.isDraw === false) {
-                    updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                if (gameController.currentTurn % 2 === 1) {
+                    gameController.takeTurn(i);
+                    if (gameController.isWin === false && gameController.isDraw === false) {
+                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                    }
+                    if (gameController.isWin === true) {
+                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+                    }
+                    if (gameController.isDraw === true) {
+                        updateStatus(`It's a Draw!`);
+                    }
+                    showResetButton();
+                    updateBoard();
                 }
-                if (gameController.isWin === true) {
-                    updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
-                }
-                if (gameController.isDraw === true) {
-                    updateStatus(`It's a Draw!`);
-                }
-                showResetButton();
-                updateBoard();
-
                 //Bot's Move:
-                if (gameController.difficulty === "easy") { //Bot logic for easy difficulty
-                    gameController.takeTurn(gameboard.selectRandomCell());
-                    if (gameController.isWin === false && gameController.isDraw === false) {
-                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
-                    }
-                    if (gameController.isWin === true) {
-                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
-                    }
-                    if (gameController.isDraw === true) {
-                        updateStatus(`It's a Draw!`);
-                    }
-                    showResetButton();
-                    updateBoard();
-                }
-                if (gameController.difficulty === "intermediate") { //Bot logic for intermediate difficulty
-                    if (gameController.findDefensiveMove() !== undefined) {
-                        gameController.takeTurn(gameController.findDefensiveMove());
-                    } else {
+                if (gameController.currentTurn % 2 === 0) {
+                    if (gameController.difficulty === "easy") { //Bot logic for easy difficulty
                         gameController.takeTurn(gameboard.selectRandomCell());
+                        if (gameController.isWin === false && gameController.isDraw === false) {
+                            updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                        }
+                        if (gameController.isWin === true) {
+                            updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+                        }
+                        if (gameController.isDraw === true) {
+                            updateStatus(`It's a Draw!`);
+                        }
+                        showResetButton();
+                        updateBoard();
                     }
+                    if (gameController.difficulty === "intermediate") { //Bot logic for intermediate difficulty
+                        if (gameController.findDefensiveMove() !== undefined) {
+                            gameController.takeTurn(gameController.findDefensiveMove());
+                        } else {
+                            gameController.takeTurn(gameboard.selectRandomCell());
+                        }
 
-                    if (gameController.isWin === false && gameController.isDraw === false) {
-                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                        if (gameController.isWin === false && gameController.isDraw === false) {
+                            updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                        }
+                        if (gameController.isWin === true) {
+                            updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+                        }
+                        if (gameController.isDraw === true) {
+                            updateStatus(`It's a Draw!`);
+                        }
+                        showResetButton();
+                        updateBoard();
                     }
-                    if (gameController.isWin === true) {
-                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
-                    }
-                    if (gameController.isDraw === true) {
-                        updateStatus(`It's a Draw!`);
-                    }
-                    showResetButton();
-                    updateBoard();
-                }
-                if (gameController.difficulty === "hard") { //Bot logic for hard difficulty
-                    if (gameController.findAggressiveMove() !== undefined) { //Check if there's a move that lets the bot win
-                        gameController.takeTurn(gameController.findAggressiveMove()); 
-                    } else if (gameController.findDefensiveMove() !== undefined) { //If not, check if bot can block the player from winning
-                        gameController.takeTurn(gameController.findDefensiveMove());
-                    } else { //If not, make a random move.
-                        gameController.takeTurn(gameboard.selectRandomCell());
-                    }
+                    if (gameController.difficulty === "hard") { //Bot logic for hard difficulty
+                        if (gameController.findAggressiveMove() !== undefined) { //Check if there's a move that lets the bot win
+                            gameController.takeTurn(gameController.findAggressiveMove()); 
+                        } else if (gameController.findDefensiveMove() !== undefined) { //If not, check if bot can block the player from winning
+                            gameController.takeTurn(gameController.findDefensiveMove());
+                        } else { //If not, make a random move.
+                            gameController.takeTurn(gameboard.selectRandomCell());
+                        }
 
-                    if (gameController.isWin === false && gameController.isDraw === false) {
-                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                        if (gameController.isWin === false && gameController.isDraw === false) {
+                            updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                        }
+                        if (gameController.isWin === true) {
+                            updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+                        }
+                        if (gameController.isDraw === true) {
+                            updateStatus(`It's a Draw!`);
+                        }
+                        showResetButton();
+                        updateBoard();
                     }
-                    if (gameController.isWin === true) {
-                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
-                    }
-                    if (gameController.isDraw === true) {
-                        updateStatus(`It's a Draw!`);
-                    }
-                    showResetButton();
-                    updateBoard();
-                }
-                if (gameController.difficulty === "expert") { //Bot logic for expert difficulty
-                    if (gameController.findBestEarlyMove() !== undefined) {
-                        gameController.takeTurn(gameController.findBestEarlyMove());
-                    } else if (gameController.findAggressiveMove() !== undefined) { //Check if there's a move that lets the bot win
-                        gameController.takeTurn(gameController.findAggressiveMove()); 
-                    } else if (gameController.findDefensiveMove() !== undefined) { //If not, check if bot can block the player from winning
-                        gameController.takeTurn(gameController.findDefensiveMove());
-                    } else { //If not, make a random move.
-                        gameController.takeTurn(gameboard.selectRandomCell());
-                    }
+                    if (gameController.difficulty === "expert") { //Bot logic for expert difficulty
+                        if (gameController.findBestEarlyMove() !== undefined) {
+                            gameController.takeTurn(gameController.findBestEarlyMove());
+                        } else if (gameController.findAggressiveMove() !== undefined) { //Check if there's a move that lets the bot win
+                            gameController.takeTurn(gameController.findAggressiveMove()); 
+                        } else if (gameController.findDefensiveMove() !== undefined) { //If not, check if bot can block the player from winning
+                            gameController.takeTurn(gameController.findDefensiveMove());
+                        } else { //If not, make a random move.
+                            gameController.takeTurn(gameboard.selectRandomCell());
+                        }
 
-                    if (gameController.isWin === false && gameController.isDraw === false) {
-                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                        if (gameController.isWin === false && gameController.isDraw === false) {
+                            updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                        }
+                        if (gameController.isWin === true) {
+                            updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+                        }
+                        if (gameController.isDraw === true) {
+                            updateStatus(`It's a Draw!`);
+                        }
+                        showResetButton();
+                        updateBoard();
                     }
-                    if (gameController.isWin === true) {
-                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
-                    }
-                    if (gameController.isDraw === true) {
-                        updateStatus(`It's a Draw!`);
-                    }
-                    showResetButton();
-                    updateBoard();
                 }
             }
         })
@@ -251,18 +254,6 @@ const gameController = (() => {
         }
         gameController.currentTurn = currentTurn;
     };
-
-    const checkDifficulty = () => {
-        if (difficulty === "easy") {
-            return "easy";
-        } else if (difficulty === "intermediate") {
-            return "intermediate";
-        } else if (difficulty === "hard") {
-            return "hard";
-        } else if (difficulty === "expert") {
-            return "expert";
-        }
-    }
 
     //Checks if there is a draw on the board. If there is, isDraw becomes TRUE and gameOver becomes TRUE.
     const checkIfDraw = () => {
@@ -412,6 +403,7 @@ const gameController = (() => {
         isDraw = false;
         gameOver = false;
         currentTurn = 1;
+        gameController.currentTurn = currentTurn; //I don't know why I need this but everything breaks without it
     }
 
     //Makes these functions & variables accessible globally
