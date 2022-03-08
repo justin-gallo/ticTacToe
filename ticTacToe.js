@@ -95,7 +95,7 @@ const displayController = (() => {
                 updateBoard();
 
                 //Bot's Move:
-                if (gameController.difficulty === "easy") {
+                if (gameController.difficulty === "easy") { //Bot logic for easy difficulty
                     gameController.takeTurn(gameboard.selectRandomCell());
                     if (gameController.isWin === false && gameController.isDraw === false) {
                         updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
@@ -109,10 +109,31 @@ const displayController = (() => {
                     showResetButton();
                     updateBoard();
                 }
-                if (gameController.difficulty === "intermediate") {
-                    if (gameController.checkIfNearWin() !== undefined) {
-                        gameController.takeTurn(gameController.checkIfNearWin());
+                if (gameController.difficulty === "intermediate") { //Bot logic for intermediate difficulty
+                    if (gameController.findDefensiveMove() !== undefined) {
+                        gameController.takeTurn(gameController.findDefensiveMove());
                     } else {
+                        gameController.takeTurn(gameboard.selectRandomCell());
+                    }
+
+                    if (gameController.isWin === false && gameController.isDraw === false) {
+                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                    }
+                    if (gameController.isWin === true) {
+                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+                    }
+                    if (gameController.isDraw === true) {
+                        updateStatus(`It's a Draw!`);
+                    }
+                    showResetButton();
+                    updateBoard();
+                }
+                if (gameController.difficulty === "hard") { //Bot logic for hard difficulty
+                    if (gameController.findAggressiveMove() !== undefined) { //Check if there's a move that lets the bot win
+                        gameController.takeTurn(gameController.findAggressiveMove()); 
+                    } else if (gameController.findDefensiveMove() !== undefined) { //If not, check if bot can block the player from winning
+                        gameController.takeTurn(gameController.findDefensiveMove());
+                    } else { //If not, make a random move.
                         gameController.takeTurn(gameboard.selectRandomCell());
                     }
 
@@ -173,12 +194,14 @@ const gameController = (() => {
     const playerX = Player("X"); //creates playerX
     const playerO = Player("O"); //creates playerO
     const playerBot = Player("O"); //creates Bot
+    
     var currentTurn = 1; //sets the current turn to 1
     let isWin = false; //tracks if there is a win
     let isDraw = false; //tracks if there is a draw
     let gameOver = false; //tracks if the game is over
+    
     let opponent = "bot"; //Either "player" or "bot", determines opponent type
-    let difficulty = "intermediate"; // "easy", "intermediate", and "expert"
+    let difficulty = "hard"; // "easy", "intermediate", and "expert"
 
     //Determines who's turn it is (X plays on odd turns, O plays on evens)
     function getCurrentPlayerPiece() {
@@ -206,6 +229,18 @@ const gameController = (() => {
         gameController.currentTurn = currentTurn;
     };
 
+    const checkDifficulty = () => {
+        if (difficulty === "easy") {
+            return "easy";
+        } else if (difficulty === "intermediate") {
+            return "intermediate";
+        } else if (difficulty === "hard") {
+            return "hard";
+        } else if (difficulty === "expert") {
+            return "expert";
+        }
+    }
+
     //Checks if there is a draw on the board. If there is, isDraw becomes TRUE and gameOver becomes TRUE.
     const checkIfDraw = () => {
         if (currentTurn === 9 && isWin === false) {
@@ -217,7 +252,7 @@ const gameController = (() => {
     }
 
     //Determines if the player is near a win, and returns the index of the space for the bot to place its piece if yes.
-    const checkIfNearWin = () => {
+    const findDefensiveMove = () => {
         const validWinStates = [ //Hardcoded win states. These INDEXES of the board array must MATCH for a win
             [0, 1, 2],
             [3, 4, 5],
@@ -231,17 +266,44 @@ const gameController = (() => {
         for (let i = 0; i < validWinStates.length; i++) {
             let subArray = validWinStates[i]; //Each array of three in validWinStates becomes a "subArray"
             if (gameboard.board[subArray[0]] === "X" && gameboard.board[subArray[1]] === "X") { 
-                console.log("near win");
                 if (gameboard.board[subArray[2]] === "") {
                     return subArray[2];
                 };
             } else if (gameboard.board[subArray[0]] === "X" && gameboard.board[subArray[2]] === "X") {
-                console.log("near win");
                 if (gameboard.board[subArray[1]] === "") {
                     return subArray[1];
                 };
             } else if (gameboard.board[subArray[1]] === "X" && gameboard.board[subArray[2]] === "X") {
-                console.log("near win");
+                if (gameboard.board[subArray[0]] === "") {
+                    return subArray[0];
+                };
+            }
+        }
+    }
+
+    //Determines if the player is near a win, and returns the index of the space for the bot to place its piece if yes.
+    const findAggressiveMove = () => {
+        const validWinStates = [ //Hardcoded win states. These INDEXES of the board array must MATCH for a win
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8], 
+            [0, 3, 6], 
+            [1, 4, 7], 
+            [2, 5, 8], 
+            [0, 4, 8], 
+            [2, 4, 6]
+        ];
+        for (let i = 0; i < validWinStates.length; i++) {
+            let subArray = validWinStates[i]; //Each array of three in validWinStates becomes a "subArray"
+            if (gameboard.board[subArray[0]] === "O" && gameboard.board[subArray[1]] === "O") { 
+                if (gameboard.board[subArray[2]] === "") {
+                    return subArray[2];
+                };
+            } else if (gameboard.board[subArray[0]] === "O" && gameboard.board[subArray[2]] === "O") {
+                if (gameboard.board[subArray[1]] === "") {
+                    return subArray[1];
+                };
+            } else if (gameboard.board[subArray[1]] === "O" && gameboard.board[subArray[2]] === "O") {
                 if (gameboard.board[subArray[0]] === "") {
                     return subArray[0];
                 };
@@ -307,7 +369,8 @@ const gameController = (() => {
         reset,
         opponent,
         difficulty,
-        checkIfNearWin,
+        findDefensiveMove,
+        findAggressiveMove,
         currentTurn,
     }
 })();
