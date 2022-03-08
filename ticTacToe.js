@@ -62,6 +62,28 @@ const displayController = (() => {
     const status = document.getElementById("status");
     const reset = document.getElementById("resetBtn");
 
+    const settingsBtn = document.getElementById("settingsContainer");
+    const settingsModal = document.getElementById("settingsModal");
+    const closeBtn = document.getElementsByClassName("closeButton")[0];
+
+    //Open the settings modal
+    settingsBtn.onclick = function() {
+        settingsModal.style.display = "block";
+        console.log("click");
+    }
+
+    //Close the settings modal using the X
+    closeBtn.onclick = function() {
+        settingsModal.style.display = "none";
+    }
+    
+    //Close the settings modal by clicking the window
+    window.onclick = function(event) {
+        if (event.target == settingsModal) {
+            settingsModal.style.display = "none";
+        }
+    }
+
     for (let i = 0; i < boardCells.length; i++) {
         boardCells[i].addEventListener("click", function() {
             if (gameController.opponent === "player") {
