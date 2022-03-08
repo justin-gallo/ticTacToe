@@ -329,6 +329,8 @@ const gameController = (() => {
         if (gameboard.board[4] === "X") { //If player's move is in the center
             if (gameController.currentTurn === 2) { //If it's the bot's first turn
                 return 6; //The bot picks the corner 
+            } else if (gameboard.board === 4 && gameboard.board[2] === "X") { //If it's the bot's second turn AND player picked the top right corner:
+                return 8;
             }
         } else if (gameboard.board[0] === "X") { //If the player's move is in the top-left corner
             if (gameController.currentTurn === 2) { //If it's the bot's first turn
