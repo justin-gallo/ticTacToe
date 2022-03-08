@@ -173,11 +173,11 @@ const gameController = (() => {
     const playerX = Player("X"); //creates playerX
     const playerO = Player("O"); //creates playerO
     const playerBot = Player("O"); //creates Bot
-    let currentTurn = 1; //sets the current turn to 1
+    var currentTurn = 1; //sets the current turn to 1
     let isWin = false; //tracks if there is a win
     let isDraw = false; //tracks if there is a draw
     let gameOver = false; //tracks if the game is over
-    let opponent = "bot"; //Either "player" or "bot", determines opponent type
+    let opponent = "player"; //Either "player" or "bot", determines opponent type
     let difficulty = "intermediate"; // "easy", "intermediate", and "expert"
 
     //Determines who's turn it is (X plays on odd turns, O plays on evens)
@@ -203,14 +203,17 @@ const gameController = (() => {
                 currentTurn++; //increments the currentTurn variable
             }
         }
+        gameController.currentTurn = currentTurn;
     };
 
     //Checks if there is a draw on the board. If there is, isDraw becomes TRUE and gameOver becomes TRUE.
     const checkIfDraw = () => {
         if (currentTurn === 9 && isWin === false) {
-            gameController.isDraw = true;
-            gameController.gameOver = true;
+            isDraw = true;
+            gameOver = true;
         }
+        gameController.isDraw = isDraw;
+        gameController.gameOver = gameOver;
     }
 
     //Determines if the player is near a win, and returns the index of the space for the bot to place its piece if yes.
@@ -221,21 +224,27 @@ const gameController = (() => {
             [6, 7, 8], 
             [0, 3, 6], 
             [1, 4, 7], 
-            [2, 5, 8],
+            [2, 5, 8], 
             [0, 4, 8], 
             [2, 4, 6]
         ];
         for (let i = 0; i < validWinStates.length; i++) {
-            let subArray = validWinStates[i];
-            if (gameboard.board[subArray[0]] === "X" && gameboard.board[subArray[1]] === "X") {
+            let subArray = validWinStates[i]; //Each array of three in validWinStates becomes a "subArray"
+            if (gameboard.board[subArray[0]] === "X" && gameboard.board[subArray[1]] === "X") { 
                 console.log("near win");
-                return subArray[2];
+                if (gameboard.board[subArray[2]] === "") {
+                    return subArray[2];
+                };
             } else if (gameboard.board[subArray[0]] === "X" && gameboard.board[subArray[2]] === "X") {
                 console.log("near win");
-                return subArray[1];
+                if (gameboard.board[subArray[1]] === "") {
+                    return subArray[1];
+                };
             } else if (gameboard.board[subArray[1]] === "X" && gameboard.board[subArray[2]] === "X") {
                 console.log("near win");
-                return subArray[0];
+                if (gameboard.board[subArray[0]] === "") {
+                    return subArray[0];
+                };
             }
         }
     }
@@ -299,5 +308,6 @@ const gameController = (() => {
         opponent,
         difficulty,
         checkIfNearWin,
+        currentTurn,
     }
 })();
