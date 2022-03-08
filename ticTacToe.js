@@ -177,7 +177,7 @@ const gameController = (() => {
     let isWin = false; //tracks if there is a win
     let isDraw = false; //tracks if there is a draw
     let gameOver = false; //tracks if the game is over
-    let opponent = "player"; //Either "player" or "bot", determines opponent type
+    let opponent = "bot"; //Either "player" or "bot", determines opponent type
     let difficulty = "intermediate"; // "easy", "intermediate", and "expert"
 
     //Determines who's turn it is (X plays on odd turns, O plays on evens)
