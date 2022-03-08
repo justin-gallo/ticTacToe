@@ -149,6 +149,29 @@ const displayController = (() => {
                     showResetButton();
                     updateBoard();
                 }
+                if (gameController.difficulty === "expert") { //Bot logic for expert difficulty
+                    if (gameController.findBestEarlyMove() !== undefined) {
+                        gameController.takeTurn(gameController.findBestEarlyMove());
+                    } else if (gameController.findAggressiveMove() !== undefined) { //Check if there's a move that lets the bot win
+                        gameController.takeTurn(gameController.findAggressiveMove()); 
+                    } else if (gameController.findDefensiveMove() !== undefined) { //If not, check if bot can block the player from winning
+                        gameController.takeTurn(gameController.findDefensiveMove());
+                    } else { //If not, make a random move.
+                        gameController.takeTurn(gameboard.selectRandomCell());
+                    }
+
+                    if (gameController.isWin === false && gameController.isDraw === false) {
+                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()}'s Turn`);
+                    }
+                    if (gameController.isWin === true) {
+                        updateStatus(`Player ${gameController.getCurrentPlayerPiece()} Wins!`);
+                    }
+                    if (gameController.isDraw === true) {
+                        updateStatus(`It's a Draw!`);
+                    }
+                    showResetButton();
+                    updateBoard();
+                }
             }
         })
     }
@@ -201,7 +224,7 @@ const gameController = (() => {
     let gameOver = false; //tracks if the game is over
     
     let opponent = "bot"; //Either "player" or "bot", determines opponent type
-    let difficulty = "hard"; // "easy", "intermediate", and "expert"
+    let difficulty = "expert"; // "easy", "intermediate", and "expert"
 
     //Determines who's turn it is (X plays on odd turns, O plays on evens)
     function getCurrentPlayerPiece() {
@@ -311,6 +334,38 @@ const gameController = (() => {
         }
     }
 
+    const findBestEarlyMove = () => {
+        if (gameboard.board[4] === "X") { //If player's move is in the center
+            if (gameController.currentTurn === 2) { //If it's the bot's first turn
+                return 6; //The bot picks the corner 
+            }
+        } else if (gameboard.board[0] === "X") { //If the player's move is in the top-left corner
+            if (gameController.currentTurn === 2) { //If it's the bot's first turn
+                return 4; //Bot picks the center
+            } else if (gameboard.board[8] === "X" && gameController.currentTurn === 4) { //If the player picks opp corner AND it's bot's SECOND move
+                return 3; //Bot picks an edge
+            }
+        } else if (gameboard.board[2] === "X") { //If the player's move is in the top-right corner
+            if (gameController.currentTurn === 2) { //If it's the bot's first turn
+                return 4; //Bot picks the center
+            } else if (gameboard.board[6] === "X" && gameController.currentTurn === 4) { //If the player picks opp corner AND it's bot's SECOND move
+                return 1; //Bot picks an edge
+            }
+        } else if (gameboard.board[6] === "X") { //If the player's move is in the bottom-left corner
+            if (gameController.currentTurn === 2) { //If it's the bot's first turn
+                return 4; //Bot picks the center
+            } else if (gameboard.board[2] === "X" && gameController.currentTurn === 4) { //If the player picks opp corner AND it's bot's SECOND move
+                return 5; //Bot picks an edge
+            }
+        } else if (gameboard.board[8] === "X") { //If the player's move is in the bottom-right corner
+            if (gameController.currentTurn === 2) { //If it's the bot's first turn
+                return 4; //Bot picks the center
+            } else if (gameboard.board[0] === "X" && gameController.currentTurn === 4) { //If the player picks opp corner AND it's bot's SECOND move
+                return 7; //Bot picks an edge
+            }
+        }
+    }
+
     //Checks if there is a win state on the board. If there is, isWin becomes TRUE and gameOver becomes TRUE.
     const checkIfWin = () => {
         const validWinStates = [ //Hardcoded win states. These INDEXES of the board array must MATCH for a win
@@ -372,5 +427,6 @@ const gameController = (() => {
         findDefensiveMove,
         findAggressiveMove,
         currentTurn,
+        findBestEarlyMove,
     }
 })();
