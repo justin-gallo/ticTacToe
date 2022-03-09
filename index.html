@@ -36,10 +36,25 @@
         <div id="settingsModal" class="modal">
             <div class="settingsContent">
                 <span class="closeButton">&times;</span>
+                <h2 class="settingsTitle">OPTIONS</h2>
                 <h3 class="settingsHeader">Opponent</h3>
-                <!-- Radio buttons -->
-                <h3 class="settingsHeader">Difficulty</h3>
-                <!-- Radio buttons -->
+                <form class="switch-field">
+                    <input type="radio" id="radio-player" name="switch-one" value="player" onclick="gameController.setOpponent('player')" checked/>
+                    <label for="radio-player">Player</label>
+                    <input type="radio" id="radio-bot" name="switch-one" value="bot" onclick="gameController.setOpponent('bot')"/>
+                    <label for="radio-bot">Bot</label>
+                </form>
+                <h3 class="settingsHeader">Bot Difficulty</h3>
+                <form class="switch-field">
+                    <input type="radio" id="radio-easy" name="switch-two" value="easy" onclick="gameController.setDifficulty('easy')" />
+                    <label for="radio-easy">Easy</label>
+                    <input type="radio" id="radio-medium" name="switch-two" value="medium" onclick="gameController.setDifficulty('medium')" checked/>
+                    <label for="radio-medium">Medium</label>
+                    <input type="radio" id="radio-hard" name="switch-two" value="hard" onclick="gameController.setDifficulty('hard')"/>
+                    <label for="radio-hard">Hard</label>
+                    <input type="radio" id="radio-expert" name="switch-two" value="expert" onclick="gameController.setDifficulty('expert')"/>
+                    <label for="radio-expert">Expert</label>
+                </form>
             </div>
         </div>
     </main>

@@ -69,7 +69,6 @@ const displayController = (() => {
     //Open the settings modal
     settingsBtn.onclick = function() {
         settingsModal.style.display = "block";
-        console.log("click");
     }
 
     //Close the settings modal using the X
@@ -133,7 +132,7 @@ const displayController = (() => {
                         showResetButton();
                         updateBoard();
                     }
-                    if (gameController.difficulty === "intermediate") { //Bot logic for intermediate difficulty
+                    if (gameController.difficulty === "medium") { //Bot logic for medium difficulty
                         if (gameController.findDefensiveMove() !== undefined) {
                             gameController.takeTurn(gameController.findDefensiveMove());
                         } else {
@@ -248,8 +247,18 @@ const gameController = (() => {
     let isDraw = false; //tracks if there is a draw
     let gameOver = false; //tracks if the game is over
     
-    let opponent = "bot"; //Either "player" or "bot", determines opponent type
-    let difficulty = "expert"; // "easy", "intermediate", and "expert"
+    let opponent = "player"; //Either "player" or "bot", determines opponent type
+    let difficulty = "medium"; // "easy", "medium", "hard" and "expert"
+
+    //Sets the difficulty through the settings menu
+    const setDifficulty = (input) => {
+        gameController.difficulty = input;
+    }
+
+    //Sets the opponent type through the settings menu
+    const setOpponent = (input) => {
+        gameController.opponent = input;
+    }
 
     //Determines who's turn it is (X plays on odd turns, O plays on evens)
     function getCurrentPlayerPiece() {
@@ -444,5 +453,7 @@ const gameController = (() => {
         findAggressiveMove,
         currentTurn,
         findBestEarlyMove,
+        setDifficulty,
+        setOpponent,
     }
 })();

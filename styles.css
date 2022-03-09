@@ -195,8 +195,8 @@ footer {
     padding: 20px;
     border: 0px solid white;
     border-radius: 10px;
-    width: 220px;
-    height: 150px;
+    width: 300px;
+    height: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -209,6 +209,7 @@ footer {
     font-weight: bold;
     align-self: flex-end;
     margin-top: -10px;
+    margin-bottom: -7px;
 }
 
 .closeButton:hover,
@@ -218,10 +219,108 @@ footer {
     cursor: pointer;
 }
 
+.settingsContent > h2 {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+    font-size: 40px;
+    font-family: 'Vampire Wars', 'Roboto', 'Courier New', Courier, monospace;
+    color: var(--primary);
+    cursor: default;
+    transition: transform 0.2s;
+}
+
+.settingsContent > h2:hover {
+    transform: scale(1.10);
+}
+
 .settingsContent > h3 {
     margin: 0;
     padding: 0;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     color: var(--primary);
     font-size: 20px;
+    font-family: 'Vampire Wars', 'Roboto', 'Courier New', Courier, monospace;
+    cursor: default;
+}
+
+.settingsContent > h3:after {
+    content: "";
+    display: block;
+    margin: 0 auto;
+    width: 50px;
+    border-bottom: 8px dotted var(--primary);
+    padding-top: 9px;
+}
+
+/* Switch Styles */
+
+.switch-field {
+    display: flex;
+}
+
+.switch-field:first-of-type {
+    margin-bottom: 14px;
+}
+
+.switch-field input {
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    width: 1px;
+}
+
+.switch-field label {
+    font-size: 14px;
+    text-align: center;
+    width: 68px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: 1.5px solid var(--primary);
+    transition: transform 0.2s, background-color 0.3s;
+    font-family: 'Vampire Wars', 'Roboto', 'Courier New', Courier, monospace;
+    color: var(--primary);
+}
+
+.switch-field label:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+.switch-field input#radio-player:checked+label {
+    background-color: var(--primary);
+    color: var(--secondary);
+}
+
+.switch-field input#radio-bot:checked+label {
+    background-color: var(--primary);
+    color: var(--secondary);
+}
+
+.switch-field input#radio-easy:checked+label {
+    background-color: var(--primary);
+    color: var(--secondary);
+}
+
+.switch-field input#radio-medium:checked+label {
+    background-color: var(--primary);
+    color: var(--secondary);
+}
+
+.switch-field input#radio-hard:checked+label {
+    background-color: var(--primary);
+    color: var(--secondary);
+}
+
+.switch-field input#radio-expert:checked+label {
+    background-color: var(--primary);
+    color: var(--secondary);
+}
+
+.switch-field label:first-of-type {
+    border-radius: 25px 0 0 25px;
+}
+
+.switch-field label:last-of-type {
+    border-radius: 0px 25px 25px 0px;
 }
